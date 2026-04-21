@@ -16,8 +16,15 @@
   <HighResolutionIconUrl DefaultValue="https://peterjagtboe-a11y.github.io/pexip-mobile-scheduler/assets/icon-128.png"/>
   <SupportUrl DefaultValue="https://github.com/peterjagtboe-a11y/pexip-mobile-scheduler"/>
   
-  <!-- Permissions -->
-  <Permissions>ReadWriteItem</Permissions>
+  <!-- AppDomains -->
+  <AppDomains>
+    <AppDomain>https://pexip.vc</AppDomain>
+  </AppDomains>
+  
+  <!-- Hosts -->
+  <Hosts>
+    <Host Name="Mailbox"/>
+  </Hosts>
   
   <!-- Requirements -->
   <Requirements>
@@ -26,30 +33,27 @@
     </Sets>
   </Requirements>
   
-  <!-- Form Settings (legacy) -->
+  <!-- Form Settings -->
   <FormSettings>
     <Form xsi:type="ItemEdit">
       <DesktopSettings>
-        <SourceLocation DefaultValue="https://peterjagtboe-a11y.github.io/pexip-mobile-scheduler/taskpane.html"/>
-        <RequestedHeight>250</RequestedHeight>
+        <SourceLocation DefaultValue="https://peterjagtboe-a11y.github.io/pexip-mobile-scheduler/function-file.html"/>
       </DesktopSettings>
     </Form>
   </FormSettings>
   
-  <Hosts>
-    <Host Name="Mailbox"/>
-  </Hosts>
+  <!-- Permissions -->
+  <Permissions>ReadWriteItem</Permissions>
   
-  <!-- WebApplicationInfo for SSO -->
-  <WebApplicationInfo>
-    <Id>f94167dc-15d8-48a7-b8cb-25cd8bc9ab80</Id>
-    <Resource>api://f94167dc-15d8-48a7-b8cb-25cd8bc9ab80</Resource>
-    <Scopes>
-      <Scope>PexipScheduling.Access</Scope>
-    </Scopes>
-  </WebApplicationInfo>
+  <!-- Rule -->
+  <Rule xsi:type="RuleCollection" Mode="Or">
+    <Rule xsi:type="ItemIs" ItemType="Appointment" FormType="Edit"/>
+  </Rule>
   
-  <!-- Version Overrides -->
+  <!-- DisableEntityHighlighting -->
+  <DisableEntityHighlighting>false</DisableEntityHighlighting>
+  
+  <!-- Version Overrides v1.0 -->
   <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
     
     <Requirements>
@@ -69,11 +73,7 @@
             <OfficeTab id="TabDefault">
               <Group id="pexipGroup">
                 <Label resid="groupLabel"/>
-                <Icon>
-                  <bt:Image size="16" resid="icon16"/>
-                  <bt:Image size="32" resid="icon32"/>
-                  <bt:Image size="80" resid="icon80"/>
-                </Icon>
+                <!-- REMOVED: Group Icon - not allowed here -->
                 
                 <Control xsi:type="Button" id="pexipButton">
                   <Label resid="buttonLabel"/>
@@ -94,31 +94,6 @@
             </OfficeTab>
           </ExtensionPoint>
         </DesktopFormFactor>
-        
-        <!-- Mobile Form Factor -->
-        <MobileFormFactor>
-          <FunctionFile resid="functionFile"/>
-          
-          <ExtensionPoint xsi:type="MobileOnlineMeetingCommandSurface">
-            <Control xsi:type="MobileButton" id="pexipMobileButton">
-              <Label resid="buttonLabel"/>
-              <Icon>
-                <bt:Image size="25" scale="1" resid="icon16"/>
-                <bt:Image size="25" scale="2" resid="icon32"/>
-                <bt:Image size="25" scale="3" resid="icon80"/>
-                <bt:Image size="32" scale="1" resid="icon32"/>
-                <bt:Image size="32" scale="2" resid="icon32"/>
-                <bt:Image size="32" scale="3" resid="icon80"/>
-                <bt:Image size="48" scale="1" resid="icon32"/>
-                <bt:Image size="48" scale="2" resid="icon80"/>
-                <bt:Image size="48" scale="3" resid="icon80"/>
-              </Icon>
-              <Action xsi:type="ExecuteFunction">
-                <FunctionName>addDynamicPexipMeeting</FunctionName>
-              </Action>
-            </Control>
-          </ExtensionPoint>
-        </MobileFormFactor>
         
       </Host>
     </Hosts>
@@ -141,6 +116,107 @@
         <bt:String id="buttonTooltip" DefaultValue="Create a dynamic Pexip video meeting"/>
       </bt:LongStrings>
     </Resources>
+    
+    <!-- Version Overrides v1.1 - NESTED INSIDE v1.0 -->
+    <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1" xsi:type="VersionOverridesV1_1">
+      
+      <Requirements>
+        <bt:Sets DefaultMinVersion="1.5">
+          <bt:Set Name="Mailbox"/>
+        </bt:Sets>
+      </Requirements>
+      
+      <Hosts>
+        <Host xsi:type="MailHost">
+          
+          <!-- Desktop Form Factor -->
+          <DesktopFormFactor>
+            <FunctionFile resid="functionFile"/>
+            
+            <ExtensionPoint xsi:type="AppointmentOrganizerCommandSurface">
+              <OfficeTab id="TabDefault">
+                <Group id="pexipGroup">
+                  <Label resid="groupLabel"/>
+                  
+                  <Control xsi:type="Button" id="pexipButton">
+                    <Label resid="buttonLabel"/>
+                    <Supertip>
+                      <Title resid="buttonLabel"/>
+                      <Description resid="buttonTooltip"/>
+                    </Supertip>
+                    <Icon>
+                      <bt:Image size="16" resid="icon16"/>
+                      <bt:Image size="32" resid="icon32"/>
+                      <bt:Image size="80" resid="icon80"/>
+                    </Icon>
+                    <Action xsi:type="ExecuteFunction">
+                      <FunctionName>addDynamicPexipMeeting</FunctionName>
+                    </Action>
+                  </Control>
+                </Group>
+              </OfficeTab>
+            </ExtensionPoint>
+          </DesktopFormFactor>
+          
+          <!-- Mobile Form Factor - ONLY IN v1.1 -->
+          <MobileFormFactor>
+            <FunctionFile resid="functionFile"/>
+            
+            <ExtensionPoint xsi:type="MobileOnlineMeetingCommandSurface">
+              <Control xsi:type="MobileButton" id="pexipMobileButton">
+                <Label resid="buttonLabel"/>
+                <Icon>
+                  <bt:Image size="25" scale="1" resid="icon16"/>
+                  <bt:Image size="25" scale="2" resid="icon32"/>
+                  <bt:Image size="25" scale="3" resid="icon80"/>
+                  <bt:Image size="32" scale="1" resid="icon32"/>
+                  <bt:Image size="32" scale="2" resid="icon32"/>
+                  <bt:Image size="32" scale="3" resid="icon80"/>
+                  <bt:Image size="48" scale="1" resid="icon32"/>
+                  <bt:Image size="48" scale="2" resid="icon80"/>
+                  <bt:Image size="48" scale="3" resid="icon80"/>
+                </Icon>
+                <Action xsi:type="ExecuteFunction">
+                  <FunctionName>addDynamicPexipMeeting</FunctionName>
+                </Action>
+              </Control>
+            </ExtensionPoint>
+          </MobileFormFactor>
+          
+        </Host>
+      </Hosts>
+      
+      <!-- Resources -->
+      <Resources>
+        <bt:Images>
+          <bt:Image id="icon16" DefaultValue="https://peterjagtboe-a11y.github.io/pexip-mobile-scheduler/assets/icon-16.png"/>
+          <bt:Image id="icon32" DefaultValue="https://peterjagtboe-a11y.github.io/pexip-mobile-scheduler/assets/icon-32.png"/>
+          <bt:Image id="icon80" DefaultValue="https://peterjagtboe-a11y.github.io/pexip-mobile-scheduler/assets/icon-80.png"/>
+        </bt:Images>
+        <bt:Urls>
+          <bt:Url id="functionFile" DefaultValue="https://peterjagtboe-a11y.github.io/pexip-mobile-scheduler/function-file.html"/>
+        </bt:Urls>
+        <bt:ShortStrings>
+          <bt:String id="groupLabel" DefaultValue="Pexip"/>
+          <bt:String id="buttonLabel" DefaultValue="Add Pexip Meeting"/>
+        </bt:ShortStrings>
+        <bt:LongStrings>
+          <bt:String id="buttonTooltip" DefaultValue="Create a dynamic Pexip video meeting"/>
+        </bt:LongStrings>
+      </Resources>
+      
+      <!-- WebApplicationInfo - INSIDE v1.1 -->
+      <WebApplicationInfo>
+        <Id>f94167dc-15d8-48a7-b8cb-25cd8bc9ab80</Id>
+        <Resource>api://f94167dc-15d8-48a7-b8cb-25cd8bc9ab80</Resource>
+        <Scopes>
+          <Scope>openid</Scope>
+          <Scope>profile</Scope>
+          <Scope>PexipScheduling.Access</Scope>
+        </Scopes>
+      </WebApplicationInfo>
+      
+    </VersionOverrides>
     
   </VersionOverrides>
 </OfficeApp>
